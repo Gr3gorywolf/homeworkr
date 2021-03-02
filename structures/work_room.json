@@ -1,0 +1,14 @@
+{
+    "messages":[{
+        "authorId":"",
+        "message":"",
+        "createdAt":"",
+        "file":{
+            "url":"",
+            "type":""
+        }
+    }],
+    "videoCallId":"",
+    "participants":[""],
+    "homeworkId":""
+}

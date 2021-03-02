@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "502912002877",
+    "project_id": "homeworkr",
+    "storage_bucket": "homeworkr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502912002877:android:ad12ffae1a470ac054b354",
+        "android_client_info": {
+          "package_name": "com.homeworkr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502912002877-qmh0hk6q0fjcq0f7rdveuo4h8m34p45e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQl112TJnNTY2BO2xCChYrVY8xYDM7J2E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502912002877-qmh0hk6q0fjcq0f7rdveuo4h8m34p45e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

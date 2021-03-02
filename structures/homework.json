@@ -1,0 +1,15 @@
+{
+    "authorId": "",
+    "applications": [{
+        "data": "applications.json"
+    }],
+    "selectedAplication": {
+        "data": "applications.json"
+    },
+    "status": "open|pending|confirmed",
+    "price": 0,
+    "title": "",
+    "description": "",
+    "categories": [],
+    "roomId": ""
+}
