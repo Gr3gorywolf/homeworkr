@@ -19,7 +19,7 @@ class CustomIconButton extends StatelessWidget {
       this.rounded = false,
       this.isLoading = false,
       this.isIconLeftAligned = false,
-      this.hasRightArrow = true,
+      this.hasRightArrow = false,
       this.customIcon,
       this.icon,
       this.isDisabled = false,

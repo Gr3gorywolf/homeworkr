@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
     } on StateError catch (err) {
       AlertsHelpers.showSnackbar(context, err.message);
     } on Exception catch (ex) {
-      AlertsHelpers.showErrorSnackbar(context, exception: ex);
+       AlertsHelpers.showSnackbar(context, ex.toString());
     }
     setLoading(false);
   }

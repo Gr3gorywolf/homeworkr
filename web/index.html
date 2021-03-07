@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -24,11 +25,12 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>homeworkr</title>
   <link rel="manifest" href="manifest.json">
 </head>
+
 <body>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
@@ -37,24 +39,23 @@
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
   <script>
-     var firebaseConfig = {
-        apiKey: "...",
-        authDomain: "[YOUR_PROJECT].firebaseapp.com",
-        databaseURL: "https://[YOUR_PROJECT].firebaseio.com",
-        projectId: "[YOUR_PROJECT]",
-        storageBucket: "[YOUR_PROJECT].appspot.com",
-        messagingSenderId: "...",
-        appId: "1:...:web:...",
-        measurementId: "G-...",
-      };
-      firebase.initializeApp(firebaseConfig);
+    var firebaseConfig = {
+      apiKey: "AIzaSyA0kSUImhyKfXftX6SMM1Y_J4jzwfp2gNo",
+      authDomain: "homeworkr.firebaseapp.com",
+      projectId: "homeworkr",
+      storageBucket: "homeworkr.appspot.com",
+      messagingSenderId: "502912002877",
+      appId: "1:502912002877:web:aa7a3570c11c5e0254b354",
+      measurementId: "G-QBNREJEHBR"
+    };
+    firebase.initializeApp(firebaseConfig);
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
         navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
-
   </script>
   <script src="main.dart.js" type="application/javascript"></script>
 </body>
+
 </html>

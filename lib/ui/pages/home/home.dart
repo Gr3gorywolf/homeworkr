@@ -13,15 +13,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _currentItem = 0;
+  bool _isAppInitialized = false;
   List<Widget> _pages = [HomeworksPage(), ProfilePage()];
   @override
   void initState() {
     super.initState();
+  }
+
+  init() {
+     CategoriesSelectorModal.show(context);
     /*if (Stores.userStore.userRole == UserRoles.mentor) {
-      if (Stores.userStore.user.categories.length == 0) {
-        CategoriesSelectorModal.show(context);
-      }
+      if (Stores.userStore.user.categories.length == 0) {*/
+       
+     /* }
     }*/
+    _isAppInitialized = true;
   }
 
   @override
@@ -30,6 +36,9 @@ class _HomePageState extends State<HomePage> {
       store: Stores.userStore,
       child: Builder(
         builder: (ctx) {
+          if(!_isAppInitialized){
+            init();
+          }
           return Scaffold(
               body: Provider(
                   store: Stores.userStore, child: _pages[_currentItem]),
