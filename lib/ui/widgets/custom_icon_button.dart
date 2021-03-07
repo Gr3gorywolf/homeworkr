@@ -5,6 +5,7 @@ class CustomIconButton extends StatelessWidget {
   Color backgroundColor;
   Color textColor;
   bool rounded;
+  bool hasRightArrow;
   IconData icon;
   Widget customIcon;
   String text;
@@ -18,6 +19,7 @@ class CustomIconButton extends StatelessWidget {
       this.rounded = false,
       this.isLoading = false,
       this.isIconLeftAligned = false,
+      this.hasRightArrow = true,
       this.customIcon,
       this.icon,
       this.isDisabled = false,
@@ -30,6 +32,7 @@ class CustomIconButton extends StatelessWidget {
           child: Center(
             child: Text(
               text,
+              textAlign: TextAlign.center,
               style: TextStyle(color: textColor),
             ),
           ),
@@ -75,7 +78,12 @@ class CustomIconButton extends StatelessWidget {
                     SizedBox(
                       width: 10,
                     ),
-                    getText()
+                    getText(),
+                    if (hasRightArrow)
+                      Icon(
+                        Icons.chevron_right,
+                        color: textColor,
+                      )
                   ],
                 );
               }
