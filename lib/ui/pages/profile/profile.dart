@@ -14,10 +14,6 @@ class _ProfilePageState extends State<ProfilePage> {
     var _user = Stores.useUserStore(context);
     double _initialRating = 0;
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Mi perfil"),
-        ),
         body: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Center(

@@ -3,14 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:homeworkr/models/user.dart';
 
 class RegisterRepository {
+  Future<QuerySnapshot> _getCollection() async {
+    var instance = FirebaseFirestore.instance.collection("users");
+    return await instance
+        .where("UUID", isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .get();
+  }
+
   registerCurrentUserWithRole(UserRoles role) async {
     var instance = FirebaseFirestore.instance.collection("users");
 
-    var query = await instance
-        .where("UUID", isEqualTo: FirebaseAuth.instance.currentUser.uid)
-        .get();
+    var collection = await _getCollection();
     var user = FirebaseAuth.instance.currentUser;
-    if (query.docs.length == 0) {
+    if (collection.docs.length == 0) {
       return await instance.add(AppUser(
               uUID: user.uid,
               bio: "",
@@ -23,6 +28,16 @@ class RegisterRepository {
           .toJson());
     } else {
       throw new Exception("El usuario ya existe");
+    }
+  }
+
+  setUserPreferredCategories(List<String> categories) async {
+    var collection = await _getCollection();
+    if (collection.docs.length == 0) {
+      throw new Exception("El usuario no existe");
+    } else {
+      return await collection.docs.first.reference
+          .update({'categories': categories});
     }
   }
 }

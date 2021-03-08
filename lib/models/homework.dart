@@ -1,5 +1,12 @@
 import 'package:homeworkr/models/application.dart';
 
+enum HomeworkStatus {
+  open,
+  pending,
+  confirmed,
+  completed,
+}
+
 class Homework {
   String authorId;
   List<Application> applications;

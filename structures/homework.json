@@ -6,7 +6,7 @@
     "selectedAplication": {
         "data": "applications.json"
     },
-    "status": "open|pending|confirmed",
+    "status": "open|pending|confirmed|completed",
     "price": 0,
     "title": "",
     "description": "",

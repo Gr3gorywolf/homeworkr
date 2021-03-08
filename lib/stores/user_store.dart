@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_store/store.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +9,7 @@ class UserStore extends Store {
   String _idToken = null;
   AppUser _user = null;
   String get token => _idToken;
-
+  StreamSubscription<DocumentSnapshot> _listenSubscription = null;
   AppUser get user => _user;
   bool get userLogged => _user != null;
   setToken(String token) {
@@ -15,7 +17,6 @@ class UserStore extends Store {
       _idToken = token;
     });
   }
-
 
   refreshToken() async {
     if (_user != null) {
@@ -25,9 +26,6 @@ class UserStore extends Store {
       });
     }
   }
-  
-
-
 
   UserRoles get userRole {
     for (var role in UserRoles.values) {
@@ -41,6 +39,26 @@ class UserStore extends Store {
     setState(() {
       _user = user;
     });
+  }
+
+  enableUserWatching() async {
+    var result = await FirebaseFirestore.instance
+        .collection("users")
+        .where("UUID", isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+        .get();
+    if (result.docs.length > 0) {
+      _listenSubscription =
+          result.docs.first.reference.snapshots().listen((event) {
+        setUser(AppUser.fromJson(event.data()));
+      });
+    }
+  }
+
+  disableUserWatching() {
+    if (_listenSubscription != null) {
+      _listenSubscription.cancel();
+      _listenSubscription = null;
+    }
   }
 
   login() async {
@@ -58,6 +76,7 @@ class UserStore extends Store {
   logout() async {
     try {
       await FirebaseAuth.instance.signOut();
+      disableUserWatching();
     } catch (err) {}
     setState(() {
       _user = null;

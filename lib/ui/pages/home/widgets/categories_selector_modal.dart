@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:homeworkr/helpers/alerts_helpers.dart';
+import 'package:homeworkr/repository/register_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 
@@ -17,7 +18,8 @@ class CategoriesSelectorModal extends StatefulWidget {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20))),
           builder: (ctx) {
-            return CategoriesSelectorModal();
+            return WillPopScope(
+                onWillPop: () {}, child: CategoriesSelectorModal());
           });
     });
   }
@@ -32,11 +34,26 @@ class _CategoriesSelectorModalState extends State<CategoriesSelectorModal> {
   List<String> _selectedItems = [];
   completeProfile() async {
     if (_selectedItems.length > 0) {
-      
+      setLoading(true);
+      try {
+        await RegisterRepository().setUserPreferredCategories(_selectedItems);
+        Navigator.of(context).pop();
+      } catch (err) {
+        print(err);
+        AlertsHelpers.showErrorSnackbar(context,
+            exception: Exception("Error al actualizar las categorias"));
+      }
+      setLoading(false);
     } else {
-      AlertsHelpers.showAlert(
-          context, "Error", "Debe seleccionar almenos una materia");
+      AlertsHelpers.showErrorSnackbar(context,
+          exception: Exception("Debe seleccionar almenos una materia"));
     }
+  }
+
+  setLoading(bool val) {
+    setState(() {
+      _isLoading = val;
+    });
   }
 
   @override
@@ -62,7 +79,9 @@ class _CategoriesSelectorModalState extends State<CategoriesSelectorModal> {
             ),
             CustomIconButton(
               isLoading: _isLoading,
-              onPressed: () {},
+              onPressed: () {
+                completeProfile();
+              },
               text: "Completar registro",
               textColor: Colors.white,
               backgroundColor: Colors.teal,
