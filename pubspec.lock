@@ -214,13 +214,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.1"
-  jitsi_meet:
+  jitsi_meet_screen:
     dependency: "direct main"
     description:
-      name: jitsi_meet
+      name: jitsi_meet_screen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "0.0.1-dev.3"
   js:
     dependency: transitive
     description:
@@ -249,6 +249,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.1.0+2"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -303,6 +317,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  surf_lint_rules:
+    dependency: transitive
+    description:
+      name: surf_lint_rules
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2-dev.3"
   term_glyph:
     dependency: transitive
     description:
@@ -333,4 +354,4 @@ packages:
     version: "2.1.0"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.5"
+  flutter: ">=1.17.0"

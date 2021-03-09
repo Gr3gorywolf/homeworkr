@@ -1,33 +1,48 @@
+
 import 'package:flutter/material.dart';
+import 'package:homeworkr/helpers/alerts_helpers.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
-import 'package:jitsi_meet/feature_flag/feature_flag.dart';
-import 'package:jitsi_meet/jitsi_meet.dart';
+//import 'package:jitsi_meet/feature_flag/feature_flag.dart';
+//import 'package:jitsi_meet/jitsi_meet.dart';
+import 'package:jitsi_meet_screen/jitsi_meet_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class VideoCall extends StatelessWidget {
+class VideoCall extends StatefulWidget {
   String callId;
   VideoCall(this.callId);
-  _joinMeeting() async {
-    try {
-      FeatureFlag featureFlag = FeatureFlag();
-      featureFlag.welcomePageEnabled = false;
-      featureFlag.resolution = FeatureFlagVideoResolution
-          .MD_RESOLUTION; // Limit video resolution to 360p
-      var user = Stores.userStore.user;
-      var homework = Stores.currentHomeworkStore.homework;
-      var options = JitsiMeetingOptions()
-        ..room = callId // Required, spaces will be trimmed
-        ..subject = homework.title
-        ..userDisplayName = user.firstName
-        ..userAvatarURL = user.avatar // or .png
-        ..audioOnly = true
-        ..audioMuted = true
-        ..videoMuted = true
-        ..featureFlag = featureFlag;
 
-      await JitsiMeet.joinMeeting(options);
-    } catch (error) {
-      debugPrint("error: $error");
+  @override
+  _VideoCallState createState() => _VideoCallState();
+}
+
+class _VideoCallState extends State<VideoCall> {
+   final jitsiScreenController = JitsiMeetScreenController(
+    // ignore: avoid_print
+    () => print('join'),
+    // ignore: avoid_print
+    () => print('will join'),
+    // ignore: avoid_print
+    () => print('terminated'),
+  );
+  _joinMeeting() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+    if (!statuses.values.contains(PermissionStatus.denied)) {
+      // ignore: unawaited_futures
+      var user = Stores.userStore.user;
+      jitsiScreenController.setUserInfo(user.firstName, avatarURL: user.avatar);
+      jitsiScreenController.joinRoom(
+        widget.callId,
+        audioMuted: false,
+        audioOnly: false,
+        videoMuted: false
+      );
+    } else {
+      AlertsHelpers.showAlert(context, "Error",
+          "Debe aceptar todos los permisos antes de continuar");
     }
   }
 

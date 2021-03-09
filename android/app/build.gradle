@@ -44,7 +44,7 @@ android {
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-         multiDexEnabled true
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -54,14 +54,14 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled true
             useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-   }
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 flutter {

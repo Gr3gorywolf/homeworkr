@@ -30,6 +30,10 @@
 
 # Keep our interfaces so they can be used by other ProGuard rules.
 # See http://sourceforge.net/p/proguard/bugs/466/
+-keep class com.facebook.jni.** { *; }
+-keep class com.facebook.react.modules.blob.BlobCollector
+-keep class com.squareup.duktape.** { *; }
+-keep class com.facebook.hermes.reactexecutor.HermesExecutor
 -keep,allowobfuscation @interface com.facebook.proguard.annotations.DoNotStrip
 -keep,allowobfuscation @interface com.facebook.proguard.annotations.KeepGettersAndSetters
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
