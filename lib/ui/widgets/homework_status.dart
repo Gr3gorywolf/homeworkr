@@ -10,7 +10,7 @@ class HomeworkStatusWidget extends StatelessWidget {
     Color color = Colors.grey;
     String text = "Abierta";
     switch (homeworkStatus) {
-      case "pendiente":
+      case "pending":
         text = "Pendiente";
         break;
       case "confirmed":

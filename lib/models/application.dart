@@ -1,3 +1,5 @@
+enum ApplicationStatus { pending, accepted, denied }
+
 class Application {
   String authorId;
   String reason;

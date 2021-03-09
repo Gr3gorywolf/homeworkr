@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:homeworkr/helpers/alerts_helpers.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/models/user.dart';
+import 'package:homeworkr/repository/homework_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
+import 'package:homeworkr/stores/stores.dart';
+import 'package:homeworkr/ui/pages/homework_detail/widgets/applications_bottom_sheet.dart';
 import 'package:homeworkr/ui/pages/homework_detail/widgets/homework_info.dart';
+import 'package:homeworkr/ui/pages/homework_form/homework_application_form.dart';
 import 'package:homeworkr/ui/pages/homeworks/homeworks.dart';
+import 'package:homeworkr/ui/pages/workroom/workroom.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
 import 'package:homeworkr/ui/widgets/placeholder.dart';
@@ -20,8 +27,63 @@ class HomeworkDetail extends StatefulWidget {
 
 class _HomeworkDetailState extends State<HomeworkDetail> {
   Homework _homework = null;
+  bool isLoading = true;
+  bool isAppling = false;
+  bool hasErrors = false;
+  StreamSubscription<DocumentSnapshot> listener;
+  @override
+  void initState() {
+    super.initState();
+    listenHomework();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Stores.currentHomeworkStore.clearCurentHomework();
+    stopListeningHomework();
+    Stores.currentHomeworkStore.stopListeningApplications();
+  }
+
+  listenHomework() {
+    listener = query.snapshots().listen((event) {
+      print(event.data());
+      if (event.data() != null) {
+        print(event.data());
+        _homework = Homework.fromJson(event.data());
+        setState(() {
+          _homework;
+        });
+        Stores.currentHomeworkStore.setHomework(_homework, widget.homeworkId);
+        Stores.currentHomeworkStore.listenApplications(() {
+          onFetched();
+        });
+      } else {
+        AlertsHelpers.showAlert(
+            context, "Error", "No se ha encontrado la tarea");
+        setState(() {
+          hasErrors = true;
+        });
+      }
+    }, onError: (err) {
+      setState(() {
+        hasErrors = true;
+      });
+    });
+  }
+
+  stopListeningHomework() {
+    if (listener != null) {
+      listener.cancel();
+    }
+  }
 
   onFetched() {
+    setState(() {
+      isLoading = false;
+      hasErrors = false;
+    });
+
     bool amISelected = false;
     if (_homework.selectedAplication != null) {
       amISelected =
@@ -31,7 +93,7 @@ class _HomeworkDetailState extends State<HomeworkDetail> {
         _homework.status == "confirmed" &&
         !amISelected) {
       AlertsHelpers.showAlert(
-          context, "Error", "El acceso a esta orden esta restringido",
+          context, "Error", "El acceso a esta tarea esta restringido",
           cancelable: false, acceptTitle: "Salir", callback: () {
         Navigator.pop(context);
       });
@@ -53,13 +115,55 @@ class _HomeworkDetailState extends State<HomeworkDetail> {
   }
 
   bool get canApply {
+    if (_homework == null) {
+      return false;
+    }
     return Stores.userStore.userRole == UserRoles.mentor &&
-        _homework.status == "open";
+        (["open", "pending"].contains(_homework.status));
   }
 
   bool get canPayJob {
+    if (_homework == null) {
+      return false;
+    }
     return Stores.userStore.userRole == UserRoles.student &&
         _homework.status == "confirmed";
+  }
+
+  bool get canGoToRoom {
+    if (_homework == null) {
+      return false;
+    }
+    return _homework.status == "confirmed";
+  }
+
+  handleShowApplications() async {
+    ApplicationsBottomSheet.show(context, _homework);
+  }
+
+  handleSendApplication() async {
+    setState(() {
+      isAppling = true;
+    });
+    var collection = await query.collection("applications").get();
+    bool canSendApplication = true;
+    for (var doc in collection.docs) {
+      if (doc.data()['authorId'] == Stores.userStore.user.uUID) {
+        canSendApplication = false;
+        break;
+      }
+    }
+    if (canSendApplication) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) =>
+              HomeworkApplicationForm(widget.homeworkId)));
+    } else {
+      AlertsHelpers.showAlert(
+          context, "Error", "Ya usted ha enviado una aplicacion a esta tarea");
+    }
+    setState(() {
+      isAppling = false;
+    });
   }
 
   @override
@@ -68,11 +172,9 @@ class _HomeworkDetailState extends State<HomeworkDetail> {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: StreamBuilder<DocumentSnapshot>(
-        stream: query.snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
+      body: Builder(
+        builder: (BuildContext context) {
+          if (hasErrors) {
             return CustomPlaceholder(
               "Sin internet",
               Icons.error,
@@ -82,54 +184,61 @@ class _HomeworkDetailState extends State<HomeworkDetail> {
               },
             );
           }
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (isLoading) {
             return LoadableContent(isLoading: true, child: Container());
           }
-          _homework = Homework.fromJson(snapshot.data.data());
-          onFetched();
           return Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(
-                    child: ScrollableBody(
-                        hasToolbar: false, child: HomeworkInfo(_homework))),
-                SizedBox(
-                  height: 9,
-                ),
-
-                //Apply button
-                if (canApply)
-                  CustomIconButton(
-                    onPressed: () {
-                      // completeProfile();
-                    },
-                    text: "Aplicar",
-                    textColor: Colors.white,
-                    backgroundColor: Colors.teal,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                      child: SingleChildScrollView(
+                          child: HomeworkInfo(
+                    _homework,
+                    onRequestShowApplications: handleShowApplications,
+                  ))),
+                  SizedBox(
+                    height: 9,
                   ),
-                //Mark job as paid
-                if (canPayJob)
-                  CustomIconButton(
-                    onPressed: () {
-                      // completeProfile();
-                    },
-                    text: "Marcar como completada",
-                    textColor: Colors.white,
-                    backgroundColor: Colors.teal,
+                  //Apply button
+                  if (canApply)
+                    CustomIconButton(
+                      onPressed: () {
+                        handleSendApplication();
+                      },
+                      isLoading: isLoading,
+                      text: "Aplicar",
+                      textColor: Colors.white,
+                      backgroundColor: Colors.teal,
+                    ),
+                  //Mark job as paid
+                  if (canPayJob)
+                    CustomIconButton(
+                      onPressed: () {},
+                      text: "Marcar como completada",
+                      textColor: Colors.white,
+                      backgroundColor: Colors.teal,
+                    ),
+                  SizedBox(
+                    height: 9,
                   ),
-                //go to room buttom
-                if (_homework.status == "confirmed")
-                  CustomIconButton(
-                    onPressed: () {
-                      // completeProfile();
-                    },
-                    text: "Ir a la sala",
-                    textColor: Colors.white,
-                    backgroundColor: Colors.teal,
-                  ),
-              ],
+                  //go to room buttom
+                  if (canGoToRoom)
+                    CustomIconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                WorkRoomPage(_homework.roomId)));
+                      },
+                      text: "Ir a la sala",
+                      textColor: Colors.white,
+                      backgroundColor: Colors.teal,
+                    ),
+                ],
+              ),
             ),
           );
         },

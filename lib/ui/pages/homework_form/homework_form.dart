@@ -23,7 +23,6 @@ class _HomeworkFormPageState extends State<HomeworkFormPage> {
     super.initState();
     _homework = Homework(
         categories: [Stores.subjectStore.subjects.first],
-        applications: [],
         authorId: Stores.userStore.user.uUID,
         status: HelperFunctions.parseEnumVal(HomeworkStatus.open));
   }

@@ -9,7 +9,6 @@ enum HomeworkStatus {
 
 class Homework {
   String authorId;
-  List<Application> applications;
   Application selectedAplication;
   String status;
   int price;
@@ -17,10 +16,24 @@ class Homework {
   String description;
   List<String> categories;
   String roomId;
+  int get workProgress {
+    var progress = 0;
+    switch (status) {
+      case "pending":
+        progress = 1;
+        break;
+      case "confirmed":
+        progress = 2;
+        break;
+      case "completed":
+        progress = 3;
+        break;
+    }
+    return progress;
+  }
 
   Homework(
       {this.authorId,
-      this.applications,
       this.selectedAplication,
       this.status,
       this.price,
@@ -31,12 +44,6 @@ class Homework {
 
   Homework.fromJson(Map<String, dynamic> json) {
     authorId = json['authorId'];
-    if (json['applications'] != null) {
-      applications = new List<Application>();
-      json['applications'].forEach((v) {
-        applications.add(new Application.fromJson(v));
-      });
-    }
     selectedAplication = json['selectedAplication'] != null
         ? new Application.fromJson(json['selectedAplication'])
         : null;
@@ -51,9 +58,6 @@ class Homework {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['authorId'] = this.authorId;
-    if (this.applications != null) {
-      data['applications'] = this.applications.map((v) => v.toJson()).toList();
-    }
     if (this.selectedAplication != null) {
       data['selectedAplication'] = this.selectedAplication.toJson();
     }

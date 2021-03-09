@@ -27,9 +27,11 @@ class _HomeworksPageState extends State<HomeworksPage> {
           .collection('homeworks')
           .where('authorId', isEqualTo: Stores.userStore.user.uUID);
     } else {
-      return FirebaseFirestore.instance.collection('homeworks').where(
-          'categories',
-          arrayContainsAny: Stores.userStore.user.categories);
+      if (Stores.userStore.user.categories.length > 0) {
+        return FirebaseFirestore.instance.collection('homeworks').where(
+            'categories',
+            arrayContainsAny: Stores.userStore.user.categories);
+      }
     }
   }
 
@@ -46,29 +48,31 @@ class _HomeworksPageState extends State<HomeworksPage> {
   Widget build(BuildContext context) {
     var _user = Stores.useUserStore(context);
     return Scaffold(
-        body: StreamBuilder<QuerySnapshot>(
-          stream: query.snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return CustomPlaceholder(
-                "Sin internet",
-                Icons.error,
-                actionTitle: "Reconectar",
-                action: () {
-                  this.build(context);
+        body: query == null
+            ? Container()
+            : StreamBuilder<QuerySnapshot>(
+                stream: query.snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return CustomPlaceholder(
+                      "Sin internet",
+                      Icons.error,
+                      actionTitle: "Reconectar",
+                      action: () {
+                        this.build(context);
+                      },
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return LoadableContent(isLoading: true, child: Container());
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: HomeworksList(snapshot.data.docs),
+                  );
                 },
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return LoadableContent(isLoading: true, child: Container());
-            }
-            return Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: HomeworksList(snapshot.data.docs),
-            );
-          },
-        ),
+              ),
         floatingActionButton: _user.userRole == UserRoles.student
             ? FloatingActionButton(
                 backgroundColor: Colors.teal,
