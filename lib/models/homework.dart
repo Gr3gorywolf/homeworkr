@@ -7,6 +7,21 @@ enum HomeworkStatus {
   completed,
 }
 
+String traslateHomeworkStatus(String status) {
+  switch (status) {
+    case "open":
+      return "abierto";
+    case "pending":
+      return "pendiente";
+    case "confirmed":
+      return "confirmada";
+    case "completed":
+      return "completed";
+    default:
+      return status;
+  }
+}
+
 class Homework {
   String authorId;
   Application selectedAplication;

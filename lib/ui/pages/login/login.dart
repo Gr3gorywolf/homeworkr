@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           Container(
             margin: EdgeInsets.all(45),
-            child: FadeInLeft(
+            child: FadeInUp(
               delay: Duration(milliseconds: 800),
               duration: Duration(milliseconds: 700),
               child: CustomIconButton(

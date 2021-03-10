@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 class HelperFunctions{
-  static parseEnumVal(val){
+  static String parseEnumVal(val){
     return  val.toString().split('.').last;
   }
 

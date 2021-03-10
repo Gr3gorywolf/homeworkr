@@ -8,6 +8,7 @@ import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/repository/homework_repository.dart';
 import 'package:homeworkr/repository/user_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
+import 'package:homeworkr/ui/pages/profile/profile.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 import 'package:homeworkr/ui/widgets/horizontal_line.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
@@ -167,6 +168,14 @@ class __ApplicationListItemState extends State<_ApplicationListItem> {
     }
   }
 
+  String get userId {
+    if (_user == null) {
+      return null;
+    } else {
+      return _user.uUID;
+    }
+  }
+
   String get name {
     if (_user == null) {
       return "";
@@ -210,9 +219,24 @@ class __ApplicationListItemState extends State<_ApplicationListItem> {
       );
     } else {
       return ListTile(
-        leading: RoundedImage(
-          size: 50,
-          source: avatar,
+        leading: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              child: RoundedImage(
+                size: 50,
+                source: avatar,
+              ),
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  return ProfilePage(
+                    userId: userId,
+                  );
+                }));
+              },
+            ),
+          ],
         ),
         trailing: canExecuteActions
             ? Row(

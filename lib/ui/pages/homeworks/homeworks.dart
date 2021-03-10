@@ -1,11 +1,13 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:homeworkr/helpers/helper_functions.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/homework_detail/homework_detail.dart';
 import 'package:homeworkr/ui/pages/homework_form/homework_form.dart';
+import 'package:homeworkr/ui/pages/homeworks/widgets/homework_filter.dart';
 import 'package:homeworkr/ui/pages/homeworks/widgets/homework_item.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
 import 'package:homeworkr/ui/widgets/placeholder.dart';
@@ -16,29 +18,76 @@ class HomeworksPage extends StatefulWidget {
 }
 
 class _HomeworksPageState extends State<HomeworksPage> {
+  String _selectedFilter = "Todas";
   goToHomeworkForm() {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => HomeworkFormPage()));
   }
 
-  Query get query {
+  List<String> get filters {
+    List<String> vals = [];
     if (Stores.userStore.userRole == UserRoles.student) {
-      return FirebaseFirestore.instance
+      vals = HomeworkStatus.values
+          .map((a) => HelperFunctions.parseEnumVal(a))
+          .toList();
+    }
+
+    if (Stores.userStore.userRole == UserRoles.mentor) {
+      vals = ["Para ti"].toList();
+    }
+    return vals;
+  }
+
+  Query get query {
+    Query qr = null;
+    if (Stores.userStore.userRole == UserRoles.student) {
+      qr = FirebaseFirestore.instance
           .collection('homeworks')
           .where('authorId', isEqualTo: Stores.userStore.user.uUID);
     } else {
       if (Stores.userStore.user.categories.length > 0) {
-        return FirebaseFirestore.instance.collection('homeworks').where(
-            'categories',
-            arrayContainsAny: Stores.userStore.user.categories);
+        qr = FirebaseFirestore.instance.collection('homeworks');
       }
     }
+    return qr;
+  }
+
+  List<QueryDocumentSnapshot> filterDocs(List<QueryDocumentSnapshot> docs) {
+    List<QueryDocumentSnapshot> returning = [];
+    for (var doc in docs) {
+      Homework data = Homework.fromJson(doc.data());
+      //estudiante
+      if (Stores.userStore.userRole == UserRoles.student) {
+        if (_selectedFilter == 'Todas') {
+          returning.add(doc);
+        } else {
+          if (data.status == _selectedFilter) {
+            returning.add(doc);
+          }
+        }
+      }
+      //mentor
+      else {
+        var selectedApp = data.selectedAplication;
+        if (selectedApp == null ||
+            selectedApp?.authorId == Stores.userStore.user.uUID) {
+          if (_selectedFilter == 'Todas') {
+            returning.add(doc);
+          } else {
+            if (Stores.userStore.user.categories
+                .contains(data.categories.first)) {
+              returning.add(doc);
+            }
+          }
+        }
+      }
+    }
+    return returning;
   }
 
   List<Homework> getHomeworks(List<QueryDocumentSnapshot> docs) {
     List<Homework> _homeworks = [];
     for (var doc in docs) {
-      print(doc.data());
       _homeworks.add(Homework.fromJson(doc.data()));
     }
     return _homeworks;
@@ -69,7 +118,21 @@ class _HomeworksPageState extends State<HomeworksPage> {
                   }
                   return Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: HomeworksList(snapshot.data.docs),
+                    child: Column(
+                      children: [
+                        HomeworkFilter(
+                            categories: filters,
+                            selectedItem: _selectedFilter,
+                            onSelectionChanged: (sel) {
+                              setState(() {
+                                _selectedFilter = sel;
+                              });
+                            }),
+                        Expanded(
+                            child:
+                                HomeworksList(filterDocs(snapshot.data.docs))),
+                      ],
+                    ),
                   );
                 },
               ),
@@ -86,10 +149,12 @@ class _HomeworksPageState extends State<HomeworksPage> {
 class HomeworksList extends StatelessWidget {
   List<QueryDocumentSnapshot> homeworks = [];
   HomeworksList(this.homeworks);
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: homeworks.length,
+        shrinkWrap: true,
         itemBuilder: (ctx, index) {
           return FadeIn(
               child: InkWell(

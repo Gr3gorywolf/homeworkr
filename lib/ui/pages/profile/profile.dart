@@ -5,11 +5,13 @@ import 'package:homeworkr/helpers/alerts_helpers.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/repository/user_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
+import 'package:homeworkr/stores/user_store.dart';
+import 'package:homeworkr/ui/widgets/loadable_content.dart';
 import 'package:homeworkr/ui/widgets/rounded_image.dart';
 
 class ProfilePage extends StatefulWidget {
   String userId;
-  ProfilePage({userId});
+  ProfilePage({this.userId});
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -22,6 +24,15 @@ class _ProfilePageState extends State<ProfilePage> {
     setState(() {
       _isLoading = val;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.userId);
+    if (widget.userId != null) {
+      fetchUser();
+    }
   }
 
   fetchUser() async {
@@ -40,65 +51,61 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    var store = Stores.useUserStore(context);
+    UserStore store = null;
     if (widget.userId == null) {
+      store = Stores.useUserStore(context);
       _user = store.user;
     }
 
     double _initialRating = 0;
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(30.0),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RoundedImage(
-              size: 96,
-              source: _user.avatar,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(_user.firstName, style: TextStyle(fontSize: 18)),
-            SizedBox(
-              height: 20,
-            ),
-            RatingBar.builder(
-              initialRating: _initialRating,
-              minRating: 0,
-              direction: Axis.horizontal,
-              itemCount: 5,
-              itemSize: 30,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-              itemBuilder: (context, _) => Icon(
-                Icons.star,
-                color: Colors.amber,
-                size: 8,
-              ),
-              ignoreGestures: true,
-              onRatingUpdate: (rating) {},
-            ),
-            if (widget.userId == null)
-              FlatButton(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Cerrar sesion"),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Icon(Icons.logout)
-                  ],
+        appBar: widget.userId != null
+            ? AppBar(
+                title: Text("Perfil"),
+                centerTitle: true,
+              )
+            : null,
+        body: _isLoading
+            ? LoadableContent(
+                isLoading: true,
+                child: Container(),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RoundedImage(
+                        size: 96,
+                        source: _user.avatar,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(_user.firstName, style: TextStyle(fontSize: 18)),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      RatingBar.builder(
+                        initialRating: _initialRating,
+                        minRating: 0,
+                        direction: Axis.horizontal,
+                        itemCount: 5,
+                        itemSize: 30,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 8,
+                        ),
+                        ignoreGestures: true,
+                        onRatingUpdate: (rating) {},
+                      ),
+                      Spacer()
+                    ],
+                  ),
                 ),
-                onPressed: () {
-                  store.logout();
-                },
-              ),
-            Spacer()
-          ],
-        ),
-      ),
-    ));
+              ));
   }
 }
