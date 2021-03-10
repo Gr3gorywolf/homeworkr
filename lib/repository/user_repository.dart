@@ -9,7 +9,7 @@ class UserRepository {
 
   Future setBalance(String uuid, int balance) async {
     var result = await reference
-        .where("UUID", isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .where("UUID", isEqualTo: uuid)
         .get();
     if (result.docs.length > 0) {
       await result.docs.first.reference.update({"balance": balance});

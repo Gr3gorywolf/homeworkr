@@ -121,14 +121,7 @@ class _HomeworkDetailState extends State<HomeworkDetail> {
     return Stores.userStore.userRole == UserRoles.mentor &&
         (["open", "pending"].contains(_homework.status));
   }
-
-  bool get canPayJob {
-    if (_homework == null) {
-      return false;
-    }
-    return Stores.userStore.userRole == UserRoles.student &&
-        _homework.status == "confirmed";
-  }
+ 
 
   bool get canGoToRoom {
     if (_homework == null) {
@@ -214,17 +207,6 @@ class _HomeworkDetailState extends State<HomeworkDetail> {
                       textColor: Colors.white,
                       backgroundColor: Colors.teal,
                     ),
-                  //Mark job as paid
-                  if (canPayJob)
-                    CustomIconButton(
-                      onPressed: () {},
-                      text: "Marcar como completada",
-                      textColor: Colors.white,
-                      backgroundColor: Colors.teal,
-                    ),
-                  SizedBox(
-                    height: 9,
-                  ),
                   //go to room buttom
                   if (canGoToRoom)
                     CustomIconButton(

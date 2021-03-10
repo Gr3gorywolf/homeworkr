@@ -99,7 +99,22 @@ class _WorkRoomPageState extends State<WorkRoomPage> {
           if (isLoading) {
             return LoadableContent(isLoading: true, child: Container());
           }
-          return VideoCall(_workRoom.videoCallId);
+          return Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                    child: Center(
+                        child: CustomPlaceholder(
+                  "Chat",
+                  Icons.message,
+                  subtitle: "(Proximamente)",
+                ))),
+                VideoCall(_workRoom.videoCallId),
+              ],
+            ),
+          );
         }));
   }
 }

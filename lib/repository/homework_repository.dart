@@ -27,7 +27,7 @@ class HomeworkRepository {
   Future<DocumentReference> applyToHomework(
       String homeworkId, Application application) async {
     var document = await reference.doc(homeworkId);
-    setHomeworkStatus(homeworkId, HomeworkStatus.pending);
+    await setHomeworkStatus(homeworkId, HomeworkStatus.pending);
     return document.collection("applications").add(application.toJson());
   }
 
@@ -67,5 +67,20 @@ class HomeworkRepository {
                 participants: [Stores.userStore.user.uUID, applicantUId],
                 videoCallId: workRoomId)
             .toJson());
+  }
+
+  Future<DocumentReference> markHomeworkAsCompleted(String homeworkId) async {
+    var document = await reference.doc(homeworkId).get();
+    var homework = Homework.fromJson(document.data());
+    var user =
+        await UserRepository().getUser(homework.selectedAplication.authorId);
+    var currentUserBalance = user.balance + homework.price;
+    print(homework.toJson());
+    if (homework.status !=
+        HelperFunctions.parseEnumVal(HomeworkStatus.completed)) {
+      await setHomeworkStatus(homeworkId, HomeworkStatus.completed);
+      return await UserRepository()
+          .setBalance(homework.selectedAplication.authorId, currentUserBalance);
+    }
   }
 }

@@ -72,7 +72,7 @@ class AlertsHelpers {
                     Navigator.pop(ctx);
                     completer.complete(null);
                   },
-                  child: Text("Cancel")),
+                  child: Text("Cancelar")),
               FlatButton(
                   onPressed: () {
                     Navigator.pop(ctx);
@@ -103,7 +103,7 @@ class AlertsHelpers {
                     onPressed: () {
                       Navigator.pop(ctx);
                     },
-                    child: Text("Close")),
+                    child: Text("Cancelar")),
               SizedBox(
                 width: 10,
               ),
