@@ -17,10 +17,12 @@ class HomeworkFormPage extends StatefulWidget {
 class _HomeworkFormPageState extends State<HomeworkFormPage> {
   var _formKey = GlobalKey<FormState>();
   var _homework = Homework();
+  var _homeworkCategory = "";
   var _isLoading = false;
   @override
   void initState() {
     super.initState();
+    _homeworkCategory = Stores.subjectStore.subjects.first;
     _homework = Homework(
         categories: [Stores.subjectStore.subjects.first],
         authorId: Stores.userStore.user.uUID,
@@ -38,6 +40,7 @@ class _HomeworkFormPageState extends State<HomeworkFormPage> {
       setState(() {
         _isLoading = true;
       });
+      _homework.categories = [_homeworkCategory];
       try {
        var ref =  await HomeworkRepository().createHomework(_homework);
         Navigator.of(context).pop();
@@ -110,7 +113,7 @@ class _HomeworkFormPageState extends State<HomeworkFormPage> {
                                     underline: Container(),
                                     isDense: true,
                                     isExpanded: true,
-                                    value: _homework.categories[0],
+                                    value: _homeworkCategory,
                                     items: Stores.subjectStore.subjects
                                         .map((String value) {
                                       return new DropdownMenuItem<String>(
@@ -118,7 +121,11 @@ class _HomeworkFormPageState extends State<HomeworkFormPage> {
                                         child: new Text(value),
                                       );
                                     }).toList(),
-                                    onChanged: (_) {}),
+                                    onChanged: (_) {
+                                      setState(() {
+                                      _homeworkCategory = _;
+                                      });
+                                    }),
                               ),
                               SizedBox(height: 22),
                               CustomFormField(

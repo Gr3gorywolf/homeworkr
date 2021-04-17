@@ -87,7 +87,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         height: 20,
                       ),
-                      RatingBar.builder(
+                     /* RatingBar.builder(
                         initialRating: _initialRating,
                         minRating: 0,
                         direction: Axis.horizontal,
@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         ignoreGestures: true,
                         onRatingUpdate: (rating) {},
-                      ),
+                      ),*/
                       Spacer()
                     ],
                   ),

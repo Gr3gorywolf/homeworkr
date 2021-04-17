@@ -25,6 +25,7 @@ class HomeworkInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(this.homework.price );
     return Column(
       children: [
         icon,

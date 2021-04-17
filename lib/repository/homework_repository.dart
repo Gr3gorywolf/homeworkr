@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:homeworkr/helpers/helper_functions.dart';
 import 'package:homeworkr/models/application.dart';
 import 'package:homeworkr/models/homework.dart';
+import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/models/work_room.dart';
 import 'package:homeworkr/repository/user_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
@@ -68,6 +69,7 @@ class HomeworkRepository {
                 videoCallId: workRoomId)
             .toJson());
   }
+ 
 
   Future<DocumentReference> markHomeworkAsCompleted(String homeworkId) async {
     var document = await reference.doc(homeworkId).get();
