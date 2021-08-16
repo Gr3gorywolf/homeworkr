@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_store/flutter_store.dart';
 import 'package:homeworkr/stores/stores.dart';
-import 'package:homeworkr/ui/pages/home/home.dart';
-import 'package:homeworkr/ui/pages/login/login.dart';
+import 'package:homeworkr/ui/pages/home/home_page.dart';
+import 'package:homeworkr/ui/pages/login/login_page.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
 import 'package:homeworkr/ui/widgets/placeholder.dart';
 

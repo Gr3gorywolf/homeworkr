@@ -5,8 +5,8 @@ import 'package:homeworkr/helpers/helper_functions.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
-import 'package:homeworkr/ui/pages/homework_detail/homework_detail.dart';
-import 'package:homeworkr/ui/pages/homework_form/homework_form.dart';
+import 'package:homeworkr/ui/pages/homework_detail/homework_detail_page.dart';
+import 'package:homeworkr/ui/pages/homework_form/homework_form_page.dart';
 import 'package:homeworkr/ui/pages/homeworks/widgets/homework_filter.dart';
 import 'package:homeworkr/ui/pages/homeworks/widgets/homework_item.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
@@ -161,7 +161,7 @@ class HomeworksList extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            HomeworkDetail(homeworks[index].id)));
+                            HomeworkDetailPage(homeworks[index].id)));
                   },
                   child: HomeworkItem(
                       Homework.fromJson(homeworks[index].data()))));

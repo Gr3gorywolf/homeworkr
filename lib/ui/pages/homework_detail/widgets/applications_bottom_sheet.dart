@@ -8,7 +8,7 @@ import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/repository/homework_repository.dart';
 import 'package:homeworkr/repository/user_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
-import 'package:homeworkr/ui/pages/profile/profile.dart';
+import 'package:homeworkr/ui/pages/profile/profile_page.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 import 'package:homeworkr/ui/widgets/horizontal_line.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';

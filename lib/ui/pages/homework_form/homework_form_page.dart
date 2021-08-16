@@ -5,7 +5,7 @@ import 'package:homeworkr/helpers/helper_functions.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/repository/homework_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
-import 'package:homeworkr/ui/pages/homework_detail/homework_detail.dart';
+import 'package:homeworkr/ui/pages/homework_detail/homework_detail_page.dart';
 import 'package:homeworkr/ui/widgets/custom_form_field.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 
@@ -45,7 +45,7 @@ class _HomeworkFormPageState extends State<HomeworkFormPage> {
        var ref =  await HomeworkRepository().createHomework(_homework);
         Navigator.of(context).pop();
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) => HomeworkDetail(ref.id)));
+            builder: (BuildContext context) => HomeworkDetailPage(ref.id)));
       } catch (err) {
         AlertsHelpers.showSnackbar(context, "Error al crear la tarea");
       }

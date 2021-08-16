@@ -7,7 +7,7 @@ import 'package:homeworkr/helpers/alerts_helpers.dart';
 import 'package:homeworkr/helpers/auth_helpers.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
-import 'package:homeworkr/ui/pages/register/register.dart';
+import 'package:homeworkr/ui/pages/register/register_page.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 
 class LoginPage extends StatefulWidget {

@@ -11,21 +11,21 @@ import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/homework_detail/widgets/applications_bottom_sheet.dart';
 import 'package:homeworkr/ui/pages/homework_detail/widgets/homework_info.dart';
 import 'package:homeworkr/ui/pages/homework_form/homework_application_form.dart';
-import 'package:homeworkr/ui/pages/homeworks/homeworks.dart';
-import 'package:homeworkr/ui/pages/workroom/workroom.dart';
+import 'package:homeworkr/ui/pages/homeworks/homeworks_page.dart';
+import 'package:homeworkr/ui/pages/workroom/workroom_page.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
 import 'package:homeworkr/ui/widgets/placeholder.dart';
 import 'package:homeworkr/ui/widgets/scrollabe_body.dart';
 
-class HomeworkDetail extends StatefulWidget {
+class HomeworkDetailPage extends StatefulWidget {
   String homeworkId;
-  HomeworkDetail(this.homeworkId);
+  HomeworkDetailPage(this.homeworkId);
   @override
-  _HomeworkDetailState createState() => _HomeworkDetailState();
+  _HomeworkDetailPageState createState() => _HomeworkDetailPageState();
 }
 
-class _HomeworkDetailState extends State<HomeworkDetail> {
+class _HomeworkDetailPageState extends State<HomeworkDetailPage> {
   Homework _homework = null;
   bool isLoading = true;
   bool isAppling = false;

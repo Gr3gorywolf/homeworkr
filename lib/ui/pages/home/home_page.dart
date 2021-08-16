@@ -3,9 +3,9 @@ import 'package:flutter_store/flutter_store.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/home/widgets/categories_selector_modal.dart';
-import 'package:homeworkr/ui/pages/homeworks/homeworks.dart';
-import 'package:homeworkr/ui/pages/payments/payments.dart';
-import 'package:homeworkr/ui/pages/profile/profile.dart';
+import 'package:homeworkr/ui/pages/homeworks/homeworks_page.dart';
+import 'package:homeworkr/ui/pages/payments/payments_page.dart';
+import 'package:homeworkr/ui/pages/profile/profile_page.dart';
 import 'package:homeworkr/ui/widgets/coins_widget.dart';
 import 'package:homeworkr/ui/widgets/rounded_image.dart';
 
