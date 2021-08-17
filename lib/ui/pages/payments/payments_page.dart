@@ -1,11 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_store/provider.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/payments/widgets/mentors_form.dart';
 import 'package:homeworkr/ui/pages/payments/widgets/students_form.dart';
+import 'package:homeworkr/ui/widgets/placeholder.dart';
 
 class PaymentsPage extends StatelessWidget {
+  Widget buildForm(String role) {
+    if (kIsWeb) {
+      return CustomPlaceholder("No disponible en versión web", Icons.warning);
+    }
+    return role == UserRoles.mentor ? MentorsForm() : StudentsForm();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Provider(
@@ -18,9 +27,7 @@ class PaymentsPage extends StatelessWidget {
                 ? "Retirar fondos"
                 : "Ingresar fondos"),
           ),
-          body: _user.userRole == UserRoles.mentor
-              ? MentorsForm()
-              : StudentsForm(),
+          body: buildForm(_user.user.role),
         );
       }),
     );
