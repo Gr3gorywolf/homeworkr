@@ -9,7 +9,7 @@ import 'package:homeworkr/ui/widgets/placeholder.dart';
 
 class PaymentsPage extends StatelessWidget {
   Widget buildForm(String role) {
-    if (kIsWeb) {
+    if (kIsWeb && role == UserRoles.student) {
       return CustomPlaceholder("No disponible en versión web", Icons.warning);
     }
     return role == UserRoles.mentor ? MentorsForm() : StudentsForm();
