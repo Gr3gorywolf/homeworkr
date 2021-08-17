@@ -29,9 +29,35 @@
 
   <title>homeworkr</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    @keyframes flickerAnimation {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .5;
+      }
+
+      100% {
+        opacity: .9;
+      }
+    }
+
+    .splashicon {
+      width: 240px;
+      width: 240px;
+      position: fixed;
+      top: calc(50% - 240px);
+      left: calc(50% - 240px);
+      animation: flickerAnimation 2s infinite;
+    }
+  </style>
 </head>
 
 <body>
+
+  <img src="favicon.png" class="splashicon" alt="">
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-firestore.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.20.0/firebase-auth.js"></script>
