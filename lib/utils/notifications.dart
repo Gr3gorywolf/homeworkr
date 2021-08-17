@@ -17,7 +17,7 @@ class Notifications {
     return Notification(
         title: "${from.role} ha entrado en la sala de tareas",
         body:
-            "El ${from.role} ha entrado a la sala de tareas de la tarea ${homework.title}",
+            "El ${from.role} ha entrado a la videollamada de la tarea ${homework.title}",
         to: to.uUID);
   }
 
