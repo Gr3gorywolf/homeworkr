@@ -14,6 +14,8 @@ class CurrentHomeworkStore extends Store {
   StreamSubscription<QuerySnapshot> applicationsListener = null;
   List<Application> _applications = [];
   List<AppUser> _applicants = [];
+  AppUser get acceptedApplicant=> _applicants.firstWhere(
+      (element) => homework.selectedAplication?.authorId == element.uUID);
   Homework get homework => _homework;
   String get homeworkId => _homeworkId;
   List<Application> get applications => _applications;
@@ -49,9 +51,9 @@ class CurrentHomeworkStore extends Store {
         apps.add(Application.fromJson(doc.data()));
         userIds.add(doc.data()['authorId']);
       }
-      if (apps.length > _applications.length) {
+      if (apps.length != _applications.length) {
         users = await UserRepository().getUsers(userIds);
-      }else{
+      } else {
         users = _applicants;
       }
       setState(() {

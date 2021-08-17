@@ -5,9 +5,12 @@ import 'package:homeworkr/helpers/helper_functions.dart';
 import 'package:homeworkr/models/application.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/repository/homework_repository.dart';
+import 'package:homeworkr/repository/notifications_repository.dart';
+import 'package:homeworkr/stores/current_homework_store.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/widgets/custom_form_field.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
+import 'package:homeworkr/utils/notifications.dart';
 
 class HomeworkApplicationForm extends StatefulWidget {
   String homeworkId;
@@ -38,6 +41,9 @@ class _HomeworkApplicationFormState extends State<HomeworkApplicationForm> {
       try {
         var ref = await HomeworkRepository()
             .applyToHomework(widget.homeworkId, _application);
+        await NotificationsRepository().PostNotification(
+            Notifications.CreateNewApplicantNotification(
+                Stores.currentHomeworkStore.homework));
         Navigator.of(context).pop();
         AlertsHelpers.showSnackbar(context, "Aplicacion enviada exitosamente",
             title: "Exito", icon: Icons.check);

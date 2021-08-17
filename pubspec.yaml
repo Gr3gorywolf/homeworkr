@@ -24,18 +24,20 @@ dependencies:
   flutter:
     sdk: flutter
   animate_do: ^1.7.5
-  firebase_core: ^0.5.3
+  firebase_core: ^0.7.0
   flutter_store:
     git:
       url: git://github.com/Gr3gorywolf/flutter_store.git
   google_sign_in: "^4.5.1"
-  cloud_firestore: "^0.14.0+1"
-  firebase_auth: ^0.18.0+1
+  cloud_firestore: "^0.16.0+1"
+  firebase_auth: "^0.20.0+1"
+  firebase_messaging: "^8.0.0-dev.14"
   form_validator: ^0.1.7
-  flushbar: ^1.10.4
+  another_flushbar: ^1.10.24
   font_awesome_flutter: ^8.11.0
   flutter_rating_bar: ^4.0.0
   intl: ">=0.14.0"
+  dio: ^3.0.10
   shimmer: ^1.0.1 
   jitsi_meet_screen: ^0.0.1-dev.3
   permission_handler: ^5.0.0

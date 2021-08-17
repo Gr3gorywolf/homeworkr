@@ -3,9 +3,11 @@ import 'package:homeworkr/helpers/alerts_helpers.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/repository/homework_repository.dart';
+import 'package:homeworkr/repository/notifications_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/homework_detail/widgets/homework_applicants_counter.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
+import 'package:homeworkr/utils/notifications.dart';
 
 class HomeworkStatusStepper extends StatefulWidget {
   Homework homework;
@@ -23,6 +25,9 @@ class _HomeworkStatusStepperState extends State<HomeworkStatusStepper> {
     });
     await HomeworkRepository()
         .markHomeworkAsCompleted(Stores.currentHomeworkStore.homeworkId);
+    await NotificationsRepository().PostNotification(
+      Notifications.CreatePayProcessedNotification(Stores.currentHomeworkStore.acceptedApplicant, Stores.currentHomeworkStore.homework)
+    );
     AlertsHelpers.showSnackbar(context, "Tarea completada y pagada!");
     setState(() {
       _isLoading = false;

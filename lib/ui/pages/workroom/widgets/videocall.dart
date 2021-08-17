@@ -1,8 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:homeworkr/helpers/alerts_helpers.dart';
+import 'package:homeworkr/helpers/helper_functions.dart';
+import 'package:homeworkr/models/user.dart';
+import 'package:homeworkr/repository/notifications_repository.dart';
+import 'package:homeworkr/repository/user_repository.dart';
+import 'package:homeworkr/stores/current_homework_store.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
+import 'package:homeworkr/utils/notifications.dart';
 //import 'package:jitsi_meet/feature_flag/feature_flag.dart';
 //import 'package:jitsi_meet/jitsi_meet.dart';
 import 'package:jitsi_meet_screen/jitsi_meet_screen.dart';
@@ -18,6 +24,7 @@ class VideoCall extends StatefulWidget {
 }
 
 class _VideoCallState extends State<VideoCall> {
+  bool _isLoading = false;
   final jitsiScreenController = JitsiMeetScreenController(
     // ignore: avoid_print
     () => print('join'),
@@ -26,7 +33,31 @@ class _VideoCallState extends State<VideoCall> {
     // ignore: avoid_print
     () => print('terminated'),
   );
+
+  notify() async {
+    var currentHomework = Stores.currentHomeworkStore.homework;
+    var from = Stores.userStore.user;
+    AppUser to = null;
+    if (from.role == 'mentor') {
+      try {
+        to = await UserRepository().getUser(currentHomework.authorId);
+      } catch (err) {
+        return;
+      }
+    }else{
+      to = Stores.currentHomeworkStore.acceptedApplicant;
+      print(to);
+    }
+    await NotificationsRepository().PostNotification(
+        Notifications.CreateEnteredOnRoomNotification(
+            from, to, currentHomework));
+  }
+
   _joinMeeting() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await notify();
     if (kIsWeb) {
       webLaunch();
       return;
@@ -45,6 +76,9 @@ class _VideoCallState extends State<VideoCall> {
       AlertsHelpers.showAlert(context, "Error",
           "Debe aceptar todos los permisos antes de continuar");
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   webLaunch() {
@@ -59,6 +93,7 @@ class _VideoCallState extends State<VideoCall> {
     return Container(
         child: CustomIconButton(
       onPressed: _joinMeeting,
+      isLoading: _isLoading,
       text: "Entrar a la videollamada",
       backgroundColor: Colors.teal,
       textColor: Colors.white,

@@ -6,6 +6,7 @@ import 'package:homeworkr/models/application.dart';
 import 'package:homeworkr/models/homework.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/repository/homework_repository.dart';
+import 'package:homeworkr/repository/notifications_repository.dart';
 import 'package:homeworkr/repository/user_repository.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/profile/profile_page.dart';
@@ -13,6 +14,7 @@ import 'package:homeworkr/ui/widgets/custom_icon_button.dart';
 import 'package:homeworkr/ui/widgets/horizontal_line.dart';
 import 'package:homeworkr/ui/widgets/loadable_content.dart';
 import 'package:homeworkr/ui/widgets/rounded_image.dart';
+import 'package:homeworkr/utils/notifications.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ApplicationsBottomSheet extends StatefulWidget {
@@ -49,6 +51,9 @@ class _ApplicationsBottomSheetState extends State<ApplicationsBottomSheet> {
     try {
       await HomeworkRepository().acceptApplication(
           Stores.currentHomeworkStore.homeworkId, app.authorId);
+        await NotificationsRepository().PostNotification(
+          Notifications.CreateApplicantAcceptedNotification(app, Stores.currentHomeworkStore.homework)
+        );
     } catch (err) {
       print(err);
       AlertsHelpers.showSnackbar(context, "Falla al aceptar la aplicacion");

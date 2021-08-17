@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flushbar/flushbar.dart';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,7 @@ class AlertsHelpers {
     }
     Flushbar(
       margin: EdgeInsets.all(8),
-      borderRadius: 8,
+      borderRadius: BorderRadius.circular(8),
       duration: Duration(seconds: duration),
       title: title,
       flushbarPosition: position,
@@ -37,7 +37,7 @@ class AlertsHelpers {
     }
     Flushbar(
       margin: EdgeInsets.all(8),
-      borderRadius: 8,
+      borderRadius: BorderRadius.circular(8),
       duration: Duration(seconds: 4),
       title: title,
       backgroundColor: Colors.red,

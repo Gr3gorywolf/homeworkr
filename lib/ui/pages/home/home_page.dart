@@ -1,5 +1,9 @@
+import 'package:another_flushbar/flushbar.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_store/flutter_store.dart';
+import 'package:homeworkr/helpers/alerts_helpers.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/home/widgets/categories_selector_modal.dart';
@@ -35,6 +39,17 @@ class _HomePageState extends State<HomePage> {
       }
     });
     await Stores.userStore.enableUserWatching();
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    if (!kIsWeb) {
+      messaging.subscribeToTopic(Stores.userStore.user.uUID);
+    }
+    FirebaseMessaging.onMessage.listen((event) {
+      AlertsHelpers.showSnackbar(context, event.notification.body,
+          title: event.notification.title,
+          position: FlushbarPosition.TOP,
+          duration: 3,
+          icon: Icons.notifications);
+    });
     _isAppInitialized = true;
   }
 
