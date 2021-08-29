@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_store/provider.dart';
+import 'package:homeworkr/helpers/helper_functions.dart';
 import 'package:homeworkr/models/user.dart';
 import 'package:homeworkr/stores/stores.dart';
 import 'package:homeworkr/ui/pages/payments/widgets/mentors_form.dart';
@@ -9,10 +10,10 @@ import 'package:homeworkr/ui/widgets/placeholder.dart';
 
 class PaymentsPage extends StatelessWidget {
   Widget buildForm(String role) {
-    if (kIsWeb && role == UserRoles.student) {
+    if (kIsWeb && role == HelperFunctions.parseEnumVal(UserRoles.student) ) {
       return CustomPlaceholder("No disponible en versión web", Icons.warning);
     }
-    return role == UserRoles.mentor ? MentorsForm() : StudentsForm();
+    return role == HelperFunctions.parseEnumVal(UserRoles.mentor) ? MentorsForm() : StudentsForm();
   }
 
   @override
