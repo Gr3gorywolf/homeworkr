@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_store/flutter_store.dart';
 import 'package:homeworkr/stores/stores.dart';
@@ -45,6 +46,7 @@ class _AppState extends State<App> {
     try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
+      if(!kIsWeb){
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       var notificationSettings = await messaging.requestPermission(
         alert: true,
@@ -55,6 +57,7 @@ class _AppState extends State<App> {
         provisional: true,
         sound: true,
       );
+      }
       setState(() {
         _initialized = true;
       });
